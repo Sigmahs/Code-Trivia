@@ -1,4 +1,5 @@
 const begin = document.getElementById("start-button");
+const showScore = document.getElementById("show-score");
 const quiz = document.getElementById("quiz");
 const question = document.getElementById("question");
 const timeRemain = document.getElementById("time-remaining");
@@ -7,8 +8,9 @@ const choiceB = document.getElementById("B");
 const choiceC = document.getElementById("C");
 const choiceD = document.getElementById("D");
 var timer;
-var timerCount;
 var score;
+var leaderboard = [];
+var isWin = false;
 
 let questions = [
     {
@@ -55,16 +57,22 @@ let questions = [
 
 let index = 0;
 
-function question() {
+function questionShow() {
     let q = questions[index];
-    q.innerHTML = "<p>" + q.question + "</p>";
+    question.innerHTML = "<p>" + q.question + "</p>";
     choiceA.innerHTML = q.choiceA;
     choiceB.innerHTML = q.choiceB;
     choiceC.innerHTML = q.choiceC;
     choiceD.innerHTML = q.choiceD;
 }
 
-const totalTime = 60;
+const timerCount = 60;
+
+function checkWin() {
+    if (index >= 5) {
+      isWin = true;
+    }
+}
 
 function countdown() { //taken from activity
     timer = setInterval(function() {
@@ -89,6 +97,63 @@ function countdown() { //taken from activity
     }
     
 function winGame(score) {
-    localStorage.setItem()
+  var c;
+  c = prompt("Congrats! Enter a name to save your score.");
+  if (c) {
+    leaderboard = localStorage.getItem("leaders");
+    leaderboard.push([score, c]);
+    leaderboard.sort(function(a, b){return b[0] - a[0]});
+    localStorage.setItem("leaders", leaderboard);
+    question.innerHTML = "Leaderboard";
+    let table = document.createElement("TABLE");
+    for (let row of leaderboard) {
+      table.insertRow();
+      for (let cell of row) {
+        let newCell = table.rows[table.row.length-1].insertCell();
+        newCell.textContent = cell;
+      }
+    }
+    document.body.appendChild(table);
+  }
 }
 
+begin.addEventListener("click", beginQuiz);
+
+function beginQuiz() {
+  while (index <= 5) {
+    questionShow();  
+  }
+}
+
+choiceA.addEventListener("click", checkAnswerA);
+choiceB.addEventListener("click", checkAnswerB);
+choiceC.addEventListener("click", checkAnswerC);
+choiceD.addEventListener("click", checkAnswerD);
+
+function checkAnswerA() {
+  if (questions[index].correct !== "A") {
+    timerCount = timerCount - 15
+  }
+  index++;
+}
+
+function checkAnswerB() {
+  if (questions[index].correct !== "B") {
+    timerCount = timerCount - 15
+  }
+  index++;
+}
+
+function checkAnswerA() {
+  if (questions[index].correct !== "C") {
+    timerCount = timerCount - 15
+  }
+  index++;
+}
+
+function checkAnswerA() {
+  if (questions[index].correct !== "D") {
+    timerCount = timerCount - 15
+  }
+  index++;
+}
