@@ -59,6 +59,20 @@ let questions = [
     },
 ]
 
+function home() {
+  wipe();
+  init();
+}
+
+function wipe() {
+  begin.innerHTML = "";
+  back.innerHTML = "";
+  clear.innerHTML = "";
+  showScore.innerHTML = "";
+  quiz.innerHTML = "";
+
+}
+
 function init() {
   begin.innerHTML = "Begin Quiz";
 }
@@ -93,7 +107,7 @@ function countdown() { //taken from activity
           if (isWin && timerCount > 0) {
             // Clears interval and stops timer
             score = timerCount;
-            console.log(score);
+            // console.log(score);
             winGame(score);
             clearInterval(timer);
           }
@@ -127,22 +141,36 @@ function winGame(score) {
         newCell.textContent = cell;
       }
     }
-    choiceA.innerHTML = '';
-    choiceB.innerHTML = '';
-    choiceC.innerHTML = '';
-    choiceD.innerHTML = '';
-    document.body.appendChild(myTable);
-    timeRemain.innerHTML = '';
+    choiceA.innerHTML = "";
+    choiceB.innerHTML = "";
+    choiceC.innerHTML = "";
+    choiceD.innerHTML = "";
+    showScore.appendChild(myTable);
+    timeRemain.innerHTML = "";
     back.innerHTML = "<button>Back</Button>";
     clear.innerHTML = "<button>Clear</Button>";
     
   }
 }
 
+function loseGame() {
+  question.innerHTML = "You ran out of time!";
+  choiceA.innerHTML = "";
+  choiceB.innerHTML = "";
+  choiceC.innerHTML = "";
+  choiceD.innerHTML = "";
+  timeRemain.innerHTML = "";
+  back.innerHTML = "<button>Home</Button>";
+  clear.innerHTML = "<button>Retry</Button>";
+}
+
 begin.addEventListener("click", beginQuiz);
 
 function beginQuiz() {
-    begin.innerHTML = '';
+    begin.innerHTML = "";
+    isWin = false;
+    index = 0;
+    timerCount = 60;
     questionShow(); 
     countdown(); 
 }
@@ -196,4 +224,11 @@ function checkAnswerD() {
   }
 }
 
+function erase() {
+  var leaderboard = { "leaderArray": [[55, "Eric"]] };
+  localStorage.setItem("leaders", JSON.stringify(leaderboard));
+}
+
 init();
+back.addEventListener("click", home);
+clear.addEventListener("click", erase);
