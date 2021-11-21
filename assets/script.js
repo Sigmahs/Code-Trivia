@@ -7,27 +7,23 @@ const choiceA = document.getElementById("A");
 const choiceB = document.getElementById("B");
 const choiceC = document.getElementById("C");
 const choiceD = document.getElementById("D");
+const back = document.getElementById("back");
+const clear = document.getElementById("clear-leaderboard");
 var timer;
 var score;
-var leaderboard = [];
+var leaderboard = { "leaderArray": [[55, "Eric"]] };
+
 var isWin = false;
+localStorage.setItem("leaders", JSON.stringify(leaderboard));
 
 let questions = [
     {
     question: "What does CSS stand for?",
     choiceA: "Cascading Style Sheet",
-    choiceB: "Character Style Selecte=or",
+    choiceB: "Character Style Selector",
     choiceC: "Connected Style Settings",
     choiceD: "Comparative Sheet Styler",
     correct: "A",
-    },
-    {
-    question: "What is the HTML element that refers to Javascript?",
-    choiceA: "<scripts>",
-    choiceB: "<script>",
-    choiceC: "<java>",
-    choiceD: "<javascript>",
-    correct: "B",
     },
     {
     question: "Which of the following is a valid while loop?",
@@ -38,12 +34,20 @@ let questions = [
     correct: "C",
     },
     {
+    question: "What is the HTML element that refers to Javascript in the carrot brackets?",
+    choiceA: "scripts",
+    choiceB: "script",
+    choiceC: "java",
+    choiceD: "javascript",
+    correct: "B",
+    },
+    {
     question: "Which of the following is a comment in javascript?",
-    choiceA: "<!-- what's up -->",
+    choiceA: "!-- what's up --",
     choiceB: "//My broski,",
     choiceC: "#It's been",
     choiceD: "{Too long",
-    correct: "B"
+    correct: "B",
     },
     {
     question: "Which of these refers to a mouse click?",
@@ -55,10 +59,16 @@ let questions = [
     },
 ]
 
+function init() {
+  begin.innerHTML = "Begin Quiz";
+}
+
 let index = 0;
 
 function questionShow() {
+    // console.log(index);
     let q = questions[index];
+    console.log(q);
     question.innerHTML = "<p>" + q.question + "</p>";
     choiceA.innerHTML = q.choiceA;
     choiceB.innerHTML = q.choiceB;
@@ -66,10 +76,10 @@ function questionShow() {
     choiceD.innerHTML = q.choiceD;
 }
 
-const timerCount = 60;
+var timerCount = 60;
 
 function checkWin() {
-    if (index >= 5) {
+    if (index === 5) {
       isWin = true;
     }
 }
@@ -83,12 +93,13 @@ function countdown() { //taken from activity
           if (isWin && timerCount > 0) {
             // Clears interval and stops timer
             score = timerCount;
+            console.log(score);
             winGame(score);
             clearInterval(timer);
           }
         }
         // Tests if time has run out
-        if (timerCount === 0) {
+        if (timerCount <= 0) {
           // Clears interval
           clearInterval(timer);
           loseGame();
@@ -100,29 +111,40 @@ function winGame(score) {
   var c;
   c = prompt("Congrats! Enter a name to save your score.");
   if (c) {
-    leaderboard = localStorage.getItem("leaders");
-    leaderboard.push([score, c]);
-    leaderboard.sort(function(a, b){return b[0] - a[0]});
-    localStorage.setItem("leaders", leaderboard);
+    leaderboard = JSON.parse(localStorage.getItem("leaders"));
+    leaderboard.leaderArray.push([score, c]);
+    // console.log(leaderboard.leaderArray);
+    leaderboard.leaderArray.sort(function(a, b){return b[0] - a[0]});
+    localStorage.setItem("leaders", JSON.stringify(leaderboard));
     question.innerHTML = "Leaderboard";
-    let table = document.createElement("TABLE");
-    for (let row of leaderboard) {
-      table.insertRow();
+    let myTable = document.createElement("table");
+    for (let row of leaderboard.leaderArray) {
+      // console.log(row);
+      myTable.insertRow();
       for (let cell of row) {
-        let newCell = table.rows[table.row.length-1].insertCell();
+        // console.log(cell);
+        let newCell = myTable.rows[myTable.rows.length-1].insertCell();
         newCell.textContent = cell;
       }
     }
-    document.body.appendChild(table);
+    choiceA.innerHTML = '';
+    choiceB.innerHTML = '';
+    choiceC.innerHTML = '';
+    choiceD.innerHTML = '';
+    document.body.appendChild(myTable);
+    timeRemain.innerHTML = '';
+    back.innerHTML = "<button>Back</Button>";
+    clear.innerHTML = "<button>Clear</Button>";
+    
   }
 }
 
 begin.addEventListener("click", beginQuiz);
 
 function beginQuiz() {
-  while (index <= 5) {
-    questionShow();  
-  }
+    begin.innerHTML = '';
+    questionShow(); 
+    countdown(); 
 }
 
 choiceA.addEventListener("click", checkAnswerA);
@@ -135,6 +157,10 @@ function checkAnswerA() {
     timerCount = timerCount - 15
   }
   index++;
+  checkWin();
+  if (index < 5) {
+    questionShow()
+  }
 }
 
 function checkAnswerB() {
@@ -142,18 +168,32 @@ function checkAnswerB() {
     timerCount = timerCount - 15
   }
   index++;
+  checkWin();
+  if (index < 5) {
+    questionShow()
+  }
 }
 
-function checkAnswerA() {
+function checkAnswerC() {
   if (questions[index].correct !== "C") {
     timerCount = timerCount - 15
   }
   index++;
+  checkWin();
+  if (index < 5) {
+    questionShow()
+  }
 }
 
-function checkAnswerA() {
+function checkAnswerD() {
   if (questions[index].correct !== "D") {
     timerCount = timerCount - 15
   }
   index++;
+  checkWin();
+  if (index < 5) {
+    questionShow()
+  }
 }
+
+init();
