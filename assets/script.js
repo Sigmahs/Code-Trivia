@@ -69,8 +69,7 @@ function wipe() {
   back.innerHTML = "";
   clear.innerHTML = "";
   showScore.innerHTML = "";
-  quiz.innerHTML = "";
-
+  question.innerHTML = "";
 }
 
 function init() {
@@ -161,7 +160,7 @@ function loseGame() {
   choiceD.innerHTML = "";
   timeRemain.innerHTML = "";
   back.innerHTML = "<button>Home</Button>";
-  clear.innerHTML = "<button>Retry</Button>";
+  // clear.innerHTML = "<button>Retry</Button>";
 }
 
 begin.addEventListener("click", beginQuiz);
@@ -227,6 +226,7 @@ function checkAnswerD() {
 function erase() {
   var leaderboard = { "leaderArray": [[55, "Eric"]] };
   localStorage.setItem("leaders", JSON.stringify(leaderboard));
+  showScore.innerHTML = "";
 }
 
 init();
