@@ -182,6 +182,7 @@ choiceD.addEventListener("click", checkAnswerD);
 function checkAnswerA() {
   if (questions[index].correct !== "A") {
     timerCount = timerCount - 15
+    index--;
   }
   index++;
   checkWin();
@@ -193,17 +194,19 @@ function checkAnswerA() {
 function checkAnswerB() {
   if (questions[index].correct !== "B") {
     timerCount = timerCount - 15
+    index--;
   }
   index++;
   checkWin();
   if (index < 5) {
     questionShow()
-  }
+ } 
 }
 
 function checkAnswerC() {
   if (questions[index].correct !== "C") {
     timerCount = timerCount - 15
+    index--;
   }
   index++;
   checkWin();
@@ -215,6 +218,7 @@ function checkAnswerC() {
 function checkAnswerD() {
   if (questions[index].correct !== "D") {
     timerCount = timerCount - 15
+    index--;
   }
   index++;
   checkWin();
